@@ -1,8 +1,16 @@
 
-
 ## 1. Initial Table Definitions
 
+Before we perform any modifications, we start with the original table definitions.
+
 ### 1.1. Employees Table
+
+The `employees` table contains the following columns:
+- `emp_id` (an integer identifier)
+- `emp_name` (employee name)
+- `salary` (employee salary stored as FLOAT)
+- `hire_date` (date of hiring)
+- `Location` (employee location as text)
 
 ```sql
 CREATE TABLE employees (
@@ -15,6 +23,13 @@ CREATE TABLE employees (
 ```
 
 ### 1.2. IPL_Teams Table
+
+The `ipl_teams` table (for illustration) has:
+- `team_id`
+- `team_name`
+- `home_city`
+- `championships_won`
+- `established_year`
 
 ```sql
 CREATE TABLE ipl_teams (
@@ -30,9 +45,16 @@ CREATE TABLE ipl_teams (
 
 ## 2. Tasks on the Employees Table
 
-### 2.1. Add New Columns
-- **Task 1:** Add a new column "DOJ" (Date of Joining)
-- **Task 2:** Add two new columns "Phone_Number" and "email"
+The following tasks demonstrate how to alter the `employees` table.
+
+### 2.1. Adding New Columns
+
+**Objective:**  
+- Add a new column `DOJ` (Date of Joining).  
+- Add two new columns: `phone_number` and `email`.
+
+**Explanation:**  
+These commands use the `ALTER TABLE ... ADD COLUMN` statement to introduce new fields.
 
 ```sql
 ALTER TABLE employees 
@@ -43,15 +65,21 @@ ALTER TABLE employees
 
 ---
 
-### 2.2. Drop Columns
-- **Task 1:** Drop the column "Location"
-- **Task 2:** Drop two columns "email" and "phone_number"
+### 2.2. Dropping Columns
+
+**Objective:**  
+- Drop the column `Location`.  
+- Drop the columns `email` and `phone_number`.
+
+**Explanation:**  
+To remove columns that are no longer needed, we use the `ALTER TABLE ... DROP COLUMN` command.  
+*Note:* If you drop the `Location` column first, you cannot later rename it.
 
 ```sql
--- Drop the "Location" column:
+-- To drop the Location column:
 ALTER TABLE employees DROP COLUMN Location;
 
--- Drop the "email" and "phone_number" columns:
+-- Alternatively, to drop the email and phone_number columns:
 ALTER TABLE employees  
     DROP COLUMN email,  
     DROP COLUMN phone_number;
@@ -59,9 +87,14 @@ ALTER TABLE employees
 
 ---
 
-### 2.3. Modify Column Data Types
-- **Task 1:** Modify the `salary` column data type from FLOAT to DECIMAL(10,2)
-- **Task 2:** Reduce the `emp_name` size to 150 characters
+### 2.3. Modifying Column Data Types
+
+**Objective:**  
+- Change `salary` from FLOAT to DECIMAL(10,2) for more precision.  
+- Reduce the size of `emp_name` to 150 characters.
+
+**Explanation:**  
+The `MODIFY` clause is used to change the data type and constraints of a column.
 
 ```sql
 ALTER TABLE employees 
@@ -71,11 +104,14 @@ ALTER TABLE employees
 
 ---
 
-### 2.4. Rename Column Names
-- **Task 1:** Rename the column `hire_date` to `joining_date`
-- **Task 2:** Rename the column `Location` to `address`
+### 2.4. Renaming Columns
 
-> **Note:** If you have already dropped the `Location` column, this step would not be applicable.
+**Objective:**  
+- Rename `hire_date` to `joining_date`.  
+- Rename `Location` to `address`.
+
+**Explanation:**  
+The `CHANGE COLUMN` command (or `RENAME COLUMN` in newer MySQL versions) allows you to change the column name and optionally its data type.
 
 ```sql
 -- Rename hire_date to joining_date:
@@ -91,26 +127,36 @@ ALTER TABLE employees
 
 ---
 
-### 2.5. Rename Table Names
-- **Task 1:** Rename **employees** to **staff_members**
-- **Task 2:** Rename **employees** to **staff_members** and **departments** to **company_departments**
+### 2.5. Renaming the Table
+
+**Objective:**  
+- Rename the `employees` table to `staff_members`.  
+- Optionally, rename both `employees` and `departments` (if the departments table exists) in one statement.
+
+**Explanation:**  
+The `RENAME TABLE` statement allows you to change table names.
 
 ```sql
 -- Rename employees to staff_members:
 RENAME TABLE employees TO staff_members;
 
--- To rename multiple tables in one statement (assuming the "departments" table exists):
+-- To rename multiple tables:
 -- RENAME TABLE employees TO staff_members, departments TO company_departments;
 ```
 
 ---
 
-### 2.6. Add a Primary Key
-- **Task 1:** Set `emp_id` as the Primary Key
-- **Task 2:** Modify `emp_id` to be AUTO_INCREMENT for automatic ID generation
+### 2.6. Adding a Primary Key
+
+**Objective:**  
+- Set `emp_id` as the Primary Key.  
+- Modify `emp_id` to be AUTO_INCREMENT for automatic ID generation.
+
+**Explanation:**  
+A primary key uniquely identifies rows. The AUTO_INCREMENT attribute automatically generates a unique number.
 
 ```sql
--- Set emp_id as primary key:
+-- Set emp_id as the primary key:
 ALTER TABLE employees ADD PRIMARY KEY (emp_id);
 
 -- Modify emp_id to be AUTO_INCREMENT:
@@ -119,9 +165,14 @@ ALTER TABLE employees MODIFY emp_id INT AUTO_INCREMENT;
 
 ---
 
-### 2.7. Add a Foreign Key
-- **Task 1:** Add a new column `dept_id` to the employees table
-- **Task 2:** Set `dept_id` as a FOREIGN KEY referencing `departments(dept_id)`
+### 2.7. Adding a Foreign Key
+
+**Objective:**  
+- Add a new column `dept_id` to the employees table.  
+- Set `dept_id` as a FOREIGN KEY referencing the `departments` table.
+
+**Explanation:**  
+This demonstrates how to enforce referential integrity between tables. Ensure that the referenced table (`departments`) exists with a matching column (e.g., `dept_id`).
 
 ```sql
 -- Add dept_id column:
@@ -134,23 +185,34 @@ ALTER TABLE employees
 
 ---
 
-### 2.8. Set Default Values for Columns
-- **Task 1:** Set default `salary` as 50000
-- **Task 2:** Set default `joining_date` as Current_Date
+### 2.8. Setting Default Values for Columns
+
+**Objective:**  
+- Set default value of `salary` to 50000.  
+- Set default value of `joining_date` to the current date.
+
+**Explanation:**  
+Default values are assigned automatically when no value is specified during insertion.
 
 ```sql
--- Set default for salary:
-ALTER TABLE employees MODIFY salary DECIMAL(10,2) DEFAULT 50000;
+ALTER TABLE employees 
+    MODIFY salary DECIMAL(10,2) DEFAULT 50000;
 
--- Assuming join_date is already renamed, set its default value:
-ALTER TABLE employees MODIFY joining_date DATE DEFAULT CURRENT_DATE;
+-- Assuming join_date was already renamed:
+ALTER TABLE employees 
+    MODIFY joining_date DATE DEFAULT CURRENT_DATE;
 ```
 
 ---
 
-### 2.9. Add Unique Constraints
-- **Task 1:** Add a unique constraint to the `email` column
-- **Task 2:** Add a unique constraint to the `phone_number` column
+### 2.9. Adding Unique Constraints
+
+**Objective:**  
+- Add a unique constraint to the `email` column.  
+- Add a unique constraint to the `phone_number` column.
+
+**Explanation:**  
+Unique constraints ensure that the values in a column are distinct across all rows.
 
 ```sql
 ALTER TABLE employees 
@@ -160,21 +222,28 @@ ALTER TABLE employees
 
 ---
 
-### 2.10. Drop Constraints
-- **Task 1:** Drop the unique constraint on `email`
-- **Task 2:** Drop the unique constraint on `phone_number`
-- **Task 3:** Drop the Primary Key Constraint
+### 2.10. Dropping Constraints
+
+**Objective:**  
+- Drop the unique constraint on `email`.  
+- Drop the unique constraint on `phone_number`.  
+- Drop the primary key constraint.
+
+**Explanation:**  
+In MySQL, unique constraints are implemented as indexes. The `DROP INDEX` command is used for them, and `DROP PRIMARY KEY` removes the primary key.
 
 ```sql
--- Drop unique constraints (MySQL implements these as indexes):
+-- Drop unique constraints:
 ALTER TABLE employees 
     DROP INDEX unique_email,
     DROP INDEX unique_phone;
 
--- To drop the primary key (if the column is AUTO_INCREMENT, you might first modify it):
-ALTER TABLE employees MODIFY emp_id INT;
-ALTER TABLE employees DROP PRIMARY KEY;
+-- Drop the primary key:
+ALTER TABLE employees 
+    DROP PRIMARY KEY;
 ```
 
+> **Important:**  
+> If the primary key column is set to AUTO_INCREMENT, you might need to remove the AUTO_INCREMENT attribute before dropping the primary key.
 
-
+  
