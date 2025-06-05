@@ -1,7 +1,7 @@
 /*  1280. Students and Examinations
 
 Table: Students
-
+ 
 +---------------+---------+
 | Column Name   | Type    |
 +---------------+---------+
